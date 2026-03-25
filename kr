@@ -1,0 +1,146 @@
+restart;
+with(LinearAlgebra):
+with(plots):
+with(DEtools):
+randomize():
+
+print("==================== ЗАДАНИЕ 1 ====================");
+# Создаем матрицу 5x6 со случайными целыми числами от -10 до 10
+A := RandomMatrix(5, 6, generator = -10 .. 10);
+print("Исходная матрица 5x6:");
+print(A);
+
+# Удаляем 5 столбцов (оставляем только первый столбец)
+B := A[.., [1]];
+print("Матрица после удаления 5 столбцов:");
+print(B);
+
+# Определяем количество строк и столбцов
+rows, cols := op(1, B);
+print("Количество строк:", rows);
+print("Количество столбцов:", cols);
+
+# Находим обратную матрицу (только если матрица квадратная)
+if rows = cols then
+    try
+        B_inv := MatrixInverse(B);
+        print("Обратная матрица:");
+        print(B_inv);
+    catch:
+        print("Матрица вырождена, обратной матрицы не существует");
+    end try;
+else
+    print("Матрица не квадратная, обратной матрицы не существует");
+end if;
+
+print(" ");
+print("==================== ЗАДАНИЕ 2 ====================");
+A2 := Matrix([[1, 2], [3, 5]]);
+B2 := Matrix([[-5, 3], [2, -1]]);
+print("Матрица A:");
+print(A2);
+print("Матрица B:");
+print(B2);
+
+AB := A2 . B2;
+BA := B2 . A2;
+print("A*B:");
+print(AB);
+print("B*A:");
+print(BA);
+
+if Equal(AB, BA) then
+    print("Результат: Матрицы коммутируют");
+else
+    print("Результат: Матрицы не коммутируют");
+end if;
+
+print(" ");
+print("==================== ЗАДАНИЕ 3 ====================");
+f3 := (4*arctan(x) - x)/(1 + x^2);
+I3 := int(f3, x = 0 .. 1);
+I3_simpl := simplify(I3);
+print("Интеграл =", I3_simpl);
+print("Численное значение:", evalf(I3_simpl));
+
+print(" ");
+print("==================== ЗАДАНИЕ 4 ====================");
+y4 := ln(x + sqrt(1 + x^2)) - sqrt(1 + x^2)*arctan(x);
+print("y =", y4);
+
+y4_1 := diff(y4, x);
+y4_1_simpl := simplify(y4_1);
+print("Первая производная:");
+print(y4_1_simpl);
+
+y4_2 := diff(y4, x$2);
+y4_2_simpl := simplify(y4_2);
+print("Вторая производная:");
+print(y4_2_simpl);
+
+print(" ");
+print("==================== ЗАДАНИЕ 5 ====================");
+f5 := (1 - sqrt(3*x + 1))/cos(Pi*(x + 1)/2);
+L5 := limit(f5, x = 0);
+print("Предел =", L5);
+print("Численное значение:", evalf(L5));
+
+print(" ");
+print("==================== ЗАДАНИЕ 6 ====================");
+print("6.1) y = ln(sin x + cos x)");
+
+# Декартова система
+p1_1 := plot(ln(sin(x) + cos(x)), x = -Pi/4 .. 3*Pi/4, 
+             title = "y = ln(sin x + cos x) (декартова)", 
+             color = red, thickness = 2, labels = ["x", "y"]);
+
+# Полярная система (параметрический способ)
+p1_2 := plot([t, ln(sin(t) + cos(t)), t = -Pi/4 .. 3*Pi/4], 
+             coords = polar, color = blue, thickness = 2,
+             title = "y = ln(sin x + cos x) (полярная)");
+
+print("Графики для функции 6.1:");
+display(Array([p1_1, p1_2]));
+
+print("6.2) Параметрическая кривая: x = sqrt(2t - t^2), y = 1/sqrt((1-t)^2)");
+
+x6 := sqrt(2*t - t^2);
+y6 := 1/sqrt((1 - t)^2);
+
+# Декартова система
+p2_1 := plot([x6, y6, t = 0 .. 2], scaling = constrained,
+             title = "Параметрическая кривая (декартова)", 
+             color = red, thickness = 2, labels = ["x", "y"]);
+
+# Полярная система
+p2_2 := plot([x6, y6, t = 0 .. 2], coords = polar,
+             title = "Параметрическая кривая (полярная)", 
+             color = blue, thickness = 2);
+
+print("Графики для параметрической кривой 6.2:");
+display(Array([p2_1, p2_2]));
+
+print(" ");
+print("==================== ЗАДАНИЕ 7 ====================");
+ode := diff(y(x), x) + 4*x^3*y(x) = 4*y(x)^2*exp(4*x)*(1 - x^3);
+ic := y(0) = -1;
+print("Дифференциальное уравнение:");
+print(ode);
+print("Начальное условие: y(0) = -1");
+
+sol7 := dsolve({ode, ic}, y(x));
+sol7_simpl := simplify(sol7);
+print("Решение:");
+print(sol7_simpl);
+
+# Проверка
+print("Проверка подстановкой решения в уравнение:");
+check := odetest(sol7, ode);
+if check = 0 then
+    print("Проверка пройдена успешно");
+else
+    print("Ошибка в проверке");
+end if;
+
+print(" ");
+print("==================== ВСЕ ЗАДАНИЯ ВЫПОЛНЕНЫ ====================");
